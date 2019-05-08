@@ -10,7 +10,7 @@ import pdb
 
 def main():
     month = 201709
-    url = "https://stats.wikimedia.org/archive/squid_reports/2015-04/SquidReportPageViewsPerCountryBreakdownHuge.htm"
+    url = "https://stats.wikimedia.org/archive/squid_reports/2014-11/SquidReportPageViewsPerCountryBreakdownHuge.htm"
     # SKIP 2016-11
 
     response = requests.get(url)
@@ -28,9 +28,11 @@ def main():
             country = row.find("th").a.get("name")
         elif row.find("th").get("class") == ['l']:
             language = row.find("th").text
-            if language == "Other" or language == "Portal" or language == "m Wp" or language == "Commons Wp" or language == "wwwhttp Wp" or language == "zero Wp" or language == "plhttp Wp":
-                # The portal thing shows up in https://stats.wikimedia.org/archive/squid_reports/2015-04/SquidReportPageViewsPerCountryBreakdownHuge.htm
-                # I'm not sure what "m Wp" means; maybe mobile?
+            if language in ["Other", "Portal", "m Wp", "Commons Wp", "wwwhttp Wp", "zero Wp", "plhttp Wp", "enhttp Wp", "eshttp Wp"]:
+                # Portal, m Wp, Commons Wp, wwwhttp Wp, zero Wp, and plhttp Wp
+                # all show up in 2015-04; I'm not really sure what's up with
+                # these.
+                # https://stats.wikimedia.org/archive/squid_reports/2015-04/SquidReportPageViewsPerCountryBreakdownHuge.htm
                 continue
             assert language.endswith(" Wp")
             lang_code = LANGMAP[language[:-len(" Wp")]]
