@@ -54,13 +54,13 @@ def main():
                 assert language.endswith(" Wp")
                 lang_code = LANGMAP[language[:-len(" Wp")]]
                 viewcount = row.find("td").text
-                print(("" if first else ",") + ",".join([
+                print(("    " if first else "    ,") + "(" + ",".join([
                     mysql_quote(country),
                     mysql_quote(lang_code),
                     mysql_quote("country-total"),
                     mysql_quote("{}{:02d}".format(year, month)),
-                    viewcount,
-                ]))
+                    viewcount + "000",
+                ]) + ")")
                 first = False
             else:
                 print("we don't know what this means", file=sys.stderr)
