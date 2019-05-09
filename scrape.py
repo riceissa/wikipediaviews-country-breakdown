@@ -6,8 +6,6 @@ import sys
 
 from langmap import LANGMAP
 
-import pdb
-
 def main():
     year_months = []
     year_months.append((2014, 12))
@@ -32,10 +30,7 @@ def main():
         if year_month <= (2017, 9):
             table = soup.find_all("table")[2]
         else:
-            try:
-                table = soup.find_all("table")[1]
-            except IndexError:
-                pdb.set_trace()
+            table = soup.find_all("table")[1]
         country = None
         print("insert into viewcountsbymonth(pagename,`language`,drilldown,`monthfull`,viewcount) values")
         first = True
