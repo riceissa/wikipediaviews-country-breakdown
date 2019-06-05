@@ -33,7 +33,12 @@ def main():
             table = soup.find_all("table")[1]
         country = None
         print("insert into viewcountsbymonth(pagename,`language`,drilldown,`monthfull`,viewcount) values")
-        first = True
+
+        # We collect all the rows for a single page because sometimes we will
+        # want to combine view counts for similar languages (e.g. counts for
+        # zh-tw should be added to those of zh).
+        rows_for_page = {}
+
         for row in table.find_all("tr")[4:]:
             if row.find("th").get("class") == ['lh3']:
                 # This means we have started a new country section
@@ -49,17 +54,25 @@ def main():
                 assert language.endswith(" Wp")
                 lang_code = LANGMAP[language[:-len(" Wp")]]
                 viewcount = row.find("td").text
-                print(("    " if first else "    ,") + "(" + ",".join([
-                    mysql_quote(country),
-                    mysql_quote(lang_code),
-                    mysql_quote("country-total"),
-                    mysql_quote("{}{:02d}".format(year, month)),
-                    viewcount + "000",
-                ]) + ")")
-                first = False
+                key = (country, lang_code, year, month)
+                if key in rows_for_page:
+                    rows_for_page[key] = rows_for_page[key] + int(viewcount + "000")
+                else:
+                    rows_for_page[key] = int(viewcount + "000")
             else:
                 print("we don't know what this means", file=sys.stderr)
                 raise ValueError
+
+        first = True
+        for (country, lang_code, year, month) in rows_for_page:
+            print(("    " if first else "    ,") + "(" + ",".join([
+                mysql_quote(country),
+                mysql_quote(lang_code),
+                mysql_quote("country-total"),
+                mysql_quote("{}{:02d}".format(year, month)),
+                str(rows_for_page[(country, lang_code, year, month)]),
+            ]) + ")")
+            first = False
         print(";\n")
 
 
