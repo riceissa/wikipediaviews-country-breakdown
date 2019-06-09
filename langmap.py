@@ -340,6 +340,6 @@ LANGMAP = {
     "Kanuri": "kr",
     "Low": "nds",  # This page (https://stats.wikimedia.org/wikimedia/squids/SquidReportPageViewsPerLanguageBreakdown.htm) indicates that "Low" is Low Saxon
     "ten": "ten",
-    "nb": "nb",
-    "zh-tw": "zh",
+    "nb": "no", # Verified that nb.wikipedia.org redirects to no.wikipedia.org
+    "zh-tw": "zh", # Verified that zh-tw.wikipedia.org redirects to zh.wikipedia.org; see also https://en.wikipedia.org/wiki/Chinese_Wikipedia#Automatic_conversion_between_traditional_and_simplified_Chinese_characters
 }
